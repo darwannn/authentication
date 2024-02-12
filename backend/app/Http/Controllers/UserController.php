@@ -2,15 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Helpers\Auth;
+use Carbon\Carbon;
 use App\Mail\MyMail;
 use App\Models\User;
-use App\Helpers\Response;
+use App\Helpers\Auth;
 
+use App\Helpers\Response;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
+use Laravel\Sanctum\PersonalAccessToken;
 
 class UserController extends Controller
 {
@@ -49,7 +51,7 @@ class UserController extends Controller
             if ($user->status == 'pending') {
 
                 $code = Auth::generate_code();
-                $expires_at = date('Y-m-d H:i:s', strtotime(date("Y-m-d H:i:s")) + 900);
+                $expires_at = Carbon::now()->addMinutes(15);
                 $user->code = $code;
                 $user->expires_at = $expires_at;
                 $user->save();
@@ -86,7 +88,7 @@ class UserController extends Controller
 
 
             $code = Auth::generate_code();
-            $expires_at = date('Y-m-d H:i:s', strtotime(date("Y-m-d H:i:s")) + 900);
+            $expires_at = Carbon::now()->addMinutes(15);
             $user = User::create([
                 'first_name' => $inputs['first_name'],
                 'last_name' => $inputs['last_name'],
@@ -119,9 +121,9 @@ class UserController extends Controller
             return Response::error('Unautorized', 403);
         }
 
-        if ($user->expires_at < date('Y-m-d H:i:s')) {
+        if ($user->expires_at < Carbon::now()) {
             $code = Auth::generate_code();
-            $expires_at = date('Y-m-d H:i:s', strtotime(date("Y-m-d H:i:s")) + 900);
+            $expires_at = Carbon::now()->addMinutes(15);
             $user->code = $code;
             $user->expires_at = $expires_at;
             $user->save();
@@ -160,7 +162,7 @@ class UserController extends Controller
 
         try {
             $code = Auth::generate_code();
-            $expires_at = date('Y-m-d H:i:s', strtotime(date("Y-m-d H:i:s")) + 900);
+            $expires_at = Carbon::now()->addMinutes(15);
             $user = User::where($identifierType, $inputs['identifier'])->first();
 
             if ($user) {
@@ -186,7 +188,7 @@ class UserController extends Controller
 
     public function new_password(Request $request, $code, $id)
     {
-        $user = User::where(['code' => $code, 'id' => $id,])->where('expires_at', '>', date('Y-m-d H:i:s'))->first();
+        $user = User::where(['code' => $code, 'id' => $id,])->where('expires_at', '>', Carbon::now())->first();
 
         if (!$user) {
             return Response::error('Unautorized', 403);
@@ -197,23 +199,50 @@ class UserController extends Controller
             'password_confirmation' => ['required'],
         ], $this->custom_message);
 
-        $user->password = bcrypt($inputs['password']);
-        $user->code = 0;
+        try {
+            $user->password = bcrypt($inputs['password']);
+            $user->code = 0;
 
-        $user->status = 'verified';
+            $user->status = 'verified';
 
 
-        $user->save();
-        return Response::success(null, 'Password changed successfully. You can now login with your new password.');
+            $user->save();
+            return Response::success(null, 'Password changed successfully. You can now login with your new password.');
+        } catch (\Exception $e) {
+            error_log($e);
+            return Response::error();
+        }
     }
 
     public function verify(Request $request, $code, $id)
     {
-        $user = User::where(['code' => $code, 'id' => $id,])->where('expires_at', '>', date('Y-m-d H:i:s'))->first();
+        try {
+            $user = User::where(['code' => $code, 'id' => $id,])->where('expires_at', '>', Carbon::now())->first();
 
-        if ($user) {
-            return Response::success(null, 'Authorized');
+            if ($user) {
+                return Response::success(null, 'Authorized');
+            }
+            return Response::error('Unauthorized', 403);
+        } catch (\Exception $e) {
+            error_log($e);
+            return Response::error();
         }
-        return Response::error('Unauthorized', 403);
+    }
+
+    public function delete_unused_tokens()
+    {
+        try {
+
+            $tokens = PersonalAccessToken::where('last_used_at', '<=', Carbon::now()->subHour())
+                ->orWhere('expires_at', '<=', Carbon::now())
+                ->delete();
+
+            // if ($tokens) {
+            return Response::success(null, 'Deleted unused tokens');
+            // }
+        } catch (\Exception $e) {
+            error_log($e);
+            return Response::error();
+        }
     }
 }

@@ -27,7 +27,8 @@ Route::get('/movie', [MovieController::class, 'index']);
 Route::get('/movie/{id}', [MovieController::class, 'show']);
 Route::get('/movie/search/{category}', [MovieController::class, 'search']);
 
-
+// cron job
+Route::delete('/tokens/delete', [UserController::class, 'delete_unused_tokens']);
 
 Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('/me', [AccountController::class, 'me']);

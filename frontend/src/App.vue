@@ -7,8 +7,8 @@
 
 <template>
  
- <Navbar/>
-     <RouterView/>
+  <Navbar/>
+  <RouterView/>
    
 
   

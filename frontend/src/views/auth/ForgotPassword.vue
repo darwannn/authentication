@@ -85,12 +85,12 @@ export default {
                         Object.keys(this.error).forEach(key => {
                             this.error[key] = '';
                         });
-                    }
-                    if (data.status === "error") {
-                        this.authStore.error_message = data.message;
-                    } else {
-                        this.authStore.success_message = data.message;
-                        this.resetForm();
+                        if (data.status === "error") {
+                            this.authStore.error_message = data.message;
+                        } else {
+                            this.authStore.success_message = data.message;
+                            this.resetForm();
+                        }
                     }
                 });
                 this.isLoading = false;

@@ -97,21 +97,19 @@ export default {
                         Object.keys(this.error).forEach(key => {
                             this.error[key] = '';
                         });
-                    }
-                    if (data.status === "error") {
-                        this.authStore.error_message = data.message;
-                    } else {
-                        this.authStore.error_message = '';
-                        // localStorage.setItem('token', data.data.token);
-                        // localStorage.setItem('id', data.data.user.id);
-                        this.cookies.set('token', data.data.token);
-                        // this.cookie.set('id', id)
-                        // this.authStore.user_id = id;
-                        this.authStore.success_message = data.message;
-                       
-                        this.resetForm();
-                        
-                    this.$router.push('/')
+                        if (data.status === "error") {
+                            this.authStore.error_message = data.message;
+                        } else {
+                            this.authStore.error_message = '';
+                          
+                            this.cookies.set('token', data.data.token);
+                          
+                            this.authStore.success_message = data.message;
+                           
+                            this.resetForm();
+                            
+                        this.$router.push('/')
+                        }
                     }
                 });
                 this.isLoading = false;

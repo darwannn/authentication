@@ -1,12 +1,15 @@
 <template>
-    <div v-if="authStore.is_authenticated">
-        <h1>Welcome {{ user.first_name }} {{ user.last_name }}</h1>
-       
-        <p>Email: {{ user.email }}</p>
-        <p>Username: {{ user.username }}</p>
-    </div>
-    <div v-else>
-        <h1>Please Login to view this page</h1>
+    <div class="text-center">
+
+        <div   v-if="authStore.is_authenticated">
+            <h1>Welcome {{ user.first_name }} {{ user.last_name }}</h1>
+            
+            <p>Email: {{ user.email }}</p>
+            <p>Username: {{ user.username }}</p>
+        </div>
+        <div  v-else >
+            <h1 >Please Login to view this page</h1>
+        </div>
     </div>
 </template>
 
