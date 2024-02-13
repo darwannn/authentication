@@ -1,36 +1,26 @@
 <template>
-    <div >
+    <div>
         <div class="h-screen w-screen bg-gray-100 flex flex-col items-center justify-center gap-3">
-        <div v-if="authStore.is_authenticated">
-          
-<div class="relative mt-6 flex w-96 flex-col rounded-xl bg-white bg-clip-border text-gray-700 shadow-md text-center">
-  <div class="p-6">
-   
-    <h5 class="mb-2 block font-sans text-xl font-semibold leading-snug tracking-normal text-blue-gray-900 antialiased">
-      {{ user.first_name }} {{ user.last_name }}
-    </h5>
-    <div>@{{ user.username }}</div>
-    <div>{{ user.email }}</div>
-    
-  </div>
- 
-</div>
-
-
-        </div>
-        <div v-else>
-
-
-           
-
-                        <div class="text-xl font-semibold">Please <a href="/login" class="underline text-[#3056D3]">login</a> to view this page</div>
-                       
-                        
-                        
+            <div v-if="authStore.is_authenticated">
+                <div
+                    class="relative mt-6 flex w-96 flex-col rounded-xl bg-white bg-clip-border text-gray-700 shadow-md text-center">
+                    <div class="p-6">
+                        <h5
+                            class="mb-2 block font-sans text-xl font-semibold leading-snug tracking-normal text-blue-gray-900 antialiased">
+                            {{ user.first_name }} {{ user.last_name }}
+                        </h5>
+                        <div>@{{ user.username }}</div>
+                        <div>{{ user.email }}</div>
                     </div>
                 </div>
+            </div>
+            <div v-else>
+                <div class="text-xl font-semibold">Please <a href="/login" class="underline text-[#3056D3]">login</a> to
+                    view this page</div>
+            </div>
+        </div>
     </div>
-    
+
 </template>
 
 <script>
@@ -40,9 +30,6 @@
     import {
         useCookies
     } from "vue3-cookies";
-    import {
-        RouterLink
-    } from 'vue-router';
     export default {
         name: "home",
         setup() {
@@ -66,8 +53,6 @@
                     email: '',
                     username: ''
                 }
-
-
             };
         },
         mounted() {

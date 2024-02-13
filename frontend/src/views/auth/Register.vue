@@ -1,7 +1,7 @@
 <template>
     <section class="bg-[#F4F7FF] py-20 lg:py-[120px]">
         <div class="container">
-            <div class="flex flex-wrap -mx-4">
+            <div class="flex flex-wrap -mx-4 justify-center">
                 <div class="w-full px-4">
                     <div class="max-w-[525px] mx-auto  bg-white  rounded-lg relative overflow-hidden py-16 px-10 sm:px-12 md:px-[60px]
                ">
@@ -55,13 +55,10 @@
                         " v-model="form.password_confirmation" id="password_confirmation" name="password_confirmation" placeholder="Confirm Password" /><small
                                     class="text-left  text-red-500">{{ error.password }}</small>
                             </div>
-
-
-
                             <div class="mb-10">
                                 <button type="submit" class="w-full rounded-md border border-[#3056D3] py-3 px-5 bg-[#3056D3] text-base text-white cursor-pointer hover:bg-opacity-90 transition
                         "><span v-if="isLoading">
-                                        Loading...
+                            <v-icon name="pr-spinner" class="animate-spin" />
                                     </span>
                                     <span v-else>
                                         Register
@@ -69,11 +66,9 @@
                             </div>
                         </form>
                         <div class="text-center">
-
-
                             <p class="text-base text-[#adadad]">
                                 Already have an account?
-                                <a href="/register" class="text-primary hover:underline">
+                                <a href="/login" class="text-primary hover:underline">
                                     Login
                                 </a>
                             </p>

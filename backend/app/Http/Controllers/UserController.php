@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Carbon\Carbon;
-use App\Mail\MyMail;
+
 use App\Models\User;
 use App\Helpers\Auth;
 
@@ -11,8 +11,7 @@ use App\Helpers\Response;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Session;
-use Laravel\Sanctum\PersonalAccessToken;
+
 use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
@@ -30,13 +29,6 @@ class UserController extends Controller
 
     public function login(Request $request)
     {
-        // if (filter_var($request->identifier, FILTER_VALIDATE_EMAIL)) {
-        //     $identifierType = 'email';
-        // } else {
-        //     $identifierType = 'username';
-        // }
-
-
         $identifierType = Auth::check_identifier($request->identifier);
         $inputs =  $request->validate([
             'identifier' => ['required', Rule::exists('users',  $identifierType)],
@@ -167,7 +159,6 @@ class UserController extends Controller
 
     public function new_password(Request $request, $token, $email)
     {
-
         $password_reset = DB::table('password_reset_tokens')->where(['token' => $token, 'email' => $email])->where('expires_at', '>', Carbon::now())->first();
         if (!$password_reset) {
             return Response::error('Unautorized', 403);
@@ -202,23 +193,6 @@ class UserController extends Controller
                 return Response::success(null, 'Authorized');
             }
             return Response::error('Unauthorized', 403);
-        } catch (\Exception $e) {
-            error_log($e);
-            return Response::error();
-        }
-    }
-
-    public function delete_unused_tokens()
-    {
-        try {
-
-            $tokens = PersonalAccessToken::where('last_used_at', '<=', Carbon::now()->subHour())
-                ->orWhere('expires_at', '<=', Carbon::now())
-                ->delete();
-
-            // if ($tokens) {
-            return Response::success(null, 'Deleted unused tokens');
-            // }
         } catch (\Exception $e) {
             error_log($e);
             return Response::error();

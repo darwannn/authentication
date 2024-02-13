@@ -31,20 +31,16 @@
                         " v-model="form.password_confirmation" id="password_confirmation" name="password_confirmation" placeholder="Confirm Password" /><small
                                     class="text-left  text-red-500">{{ error.password }}</small>
                             </div>
-
-
-
                             <div class="mb-10">
                                 <button type="submit" class="w-full rounded-md border border-[#3056D3] py-3 px-5 bg-[#3056D3] text-base text-white cursor-pointer hover:bg-opacity-90 transition
                         "><span v-if="isLoading">
-                                        Loading...
+                            <v-icon name="pr-spinner" class="animate-spin" />
                                     </span>
                                     <span v-else>
                                         Change Password
                                     </span> </button>
                             </div>
                         </form>
-                       
                         <div>
                             <span class="absolute top-1 right-1">
                                 <svg width="40" height="40" viewBox="0 0 40 40" fill="none"
@@ -153,8 +149,6 @@ export default {
     },
     unmounted(){
         this.authStore.error_message ='';
-       
-        
     },
     methods: {
         async onSubmit() {

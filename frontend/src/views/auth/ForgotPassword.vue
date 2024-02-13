@@ -30,7 +30,7 @@
                             <div class="mb-10">
                                 <button type="submit" class="w-full rounded-md border border-[#3056D3] py-3 px-5 bg-[#3056D3] text-base text-white cursor-pointer hover:bg-opacity-90 transition
                         "><span v-if="isLoading">
-                                        Loading...
+                            <v-icon name="pr-spinner" class="animate-spin" />
                                     </span>
                                     <span v-else>
                                         Continue
@@ -126,6 +126,8 @@
 <script>
 import {useAuthStore } from '../../stores/auth'
 import { useCookies } from "vue3-cookies";
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+
 export default {
     name:"forgot_password",
     setup() {

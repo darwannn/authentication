@@ -7,14 +7,11 @@ use App\Mail\MyMail;
 use App\Models\User;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Password;
 
 class Auth
 {
     public static function send_email($email, $action)
     {
-
-
         $code = Auth::generate_code();
         $expires_at = Carbon::now()->addMinutes(15);
 
