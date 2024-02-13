@@ -53,7 +53,7 @@
                             <div class="mb-6">
                                 <input type="password" class=" w-full rounded-md border bordder-[#E9EDF4] py-3 px-5 bg-[#FCFDFE] text-base text-body-color placeholder-[#ACB6BE] outline-none focus-visible:shadow-none focus:border-primary
                         " v-model="form.password_confirmation" id="password_confirmation" name="password_confirmation" placeholder="Confirm Password" /><small
-                                    class="text-left  text-red-500">{{ error.password }}</small>
+                                    class="text-left  text-red-500">{{ error.password_confirmation }}</small>
                             </div>
                             <div class="mb-10">
                                 <button type="submit" class="w-full rounded-md border border-[#3056D3] py-3 px-5 bg-[#3056D3] text-base text-white cursor-pointer hover:bg-opacity-90 transition
