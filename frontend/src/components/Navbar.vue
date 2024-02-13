@@ -39,9 +39,29 @@ export default {
     this.checkAuthentication();
   },
   methods: {
-    onLogout() {
-      this.cookies.remove("token");
+    async onLogout() {
+      await fetch(`http://127.0.0.1:8000/api/auth/logout`, {
+                    method: 'POST',
+                    headers: {
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json',
+                            'Access-Control-Allow-Origin': '*',
+                            'Authorization': `Bearer ${this.cookies.get('token')}`
+                        }
+                  
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data);
+                    if (data.status === "error") {
+                        console.log("error:", data.message);
+                    } else {
+                        this.$router.push('/login')
+                        console.log("success:", data.message);
+                        this.cookies.remove("token");
       this.authStore.set_authentication(false);
+                    }
+                });
     },
     checkAuthentication() {
       const token = this.cookies.get('token');
