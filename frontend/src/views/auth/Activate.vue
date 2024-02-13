@@ -16,11 +16,11 @@ export default {
         async onVerify() {
          
             console.log("submitted");
-            const code = this.$route.params.code;
-            const id = this.$route.params.id;
-            console.log(id)
-            console.log(code)
-            await fetch(`http://127.0.0.1:8000/api/auth/activate/${code}/${id}`, {
+            const token = this.$route.params.token;
+            const email = this.$route.params.email;
+          
+        
+            await fetch(`http://127.0.0.1:8000/api/auth/activate/${token}/${email}`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
@@ -33,7 +33,7 @@ export default {
                     console.log(data);
                   
                     if (data.status === "error") {
-                        this.$router.push('/login')
+                     
                     } else {
                         
                         this.authStore.success_message = data.message;

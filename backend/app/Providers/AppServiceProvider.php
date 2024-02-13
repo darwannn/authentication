@@ -25,7 +25,6 @@ class AppServiceProvider extends ServiceProvider
             if (!$is_unused) {
                 $accessToken->delete();
             }
-
             return  $is_unused;
         };
     }
