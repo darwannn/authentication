@@ -76,6 +76,7 @@ export default {
         async onSubmit() {
             this.isLoading = true
             this.authStore.error_message =''
+            this.authStore.success_message =''
             console.log("submitted");
             await fetch("http://127.0.0.1:8000/api/auth/login", {
                     method: 'POST',

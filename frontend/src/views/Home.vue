@@ -13,7 +13,7 @@
     </div>
 </template>
 
-<script>
+<script >
 import { useAuthStore } from '../stores/auth'
 import { useCookies } from "vue3-cookies";
 import {

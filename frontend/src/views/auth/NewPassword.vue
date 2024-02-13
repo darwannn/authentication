@@ -75,9 +75,9 @@ export default {
             this.isLoading = true
             this.authStore.error_message =''
             console.log("submitted");
-            const code = this.$route.params.code;
-            const id = this.$route.params.id;
-            await fetch(`http://127.0.0.1:8000/api/auth/new-password/${code}/${id}`, {
+            const token = this.$route.params.token;
+            const email = this.$route.params.email;
+            await fetch(`http://127.0.0.1:8000/api/auth/new-password/${token}/${email}`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
@@ -110,9 +110,9 @@ export default {
         },
         async onVefify() {
            
-            const code = this.$route.params.code;
-            const id = this.$route.params.id;
-            await fetch(`http://127.0.0.1:8000/api/auth/verify/${code}/${id}`, {
+            const token = this.$route.params.token;
+            const email = this.$route.params.email;
+            await fetch(`http://127.0.0.1:8000/api/auth/verify/${token}/${email}`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
