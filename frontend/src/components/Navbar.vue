@@ -68,7 +68,7 @@ export default {
       if (token) {
        
         this.authStore.set_authentication(true);
-      } else {
+      } else { 
         console.log("No token found.");
       }
     }

@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\TestController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\MovieController;
 use App\Http\Controllers\AccountController;
@@ -16,6 +17,10 @@ use App\Http\Controllers\AccountController;
 |
 */
 
+Route::post('/test', [TestController::class, 'get_working_days']);
+
+
+Route::post('/auth/register', [UserController::class, 'register']);
 Route::post('/auth/register', [UserController::class, 'register']);
 Route::post('/auth/login', [UserController::class, 'login']);
 Route::post('/auth/forgot-password', [UserController::class, 'forgot_password']);
