@@ -28,7 +28,7 @@ class Handler extends ExceptionHandler
     {
         $this->reportable(function (Throwable $e) {
             error_log("12345" . $e);
-            //Str::uuid(),
+
             $data = [
 
                 'file'    => $e->getFile(),

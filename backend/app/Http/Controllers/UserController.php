@@ -31,6 +31,8 @@ class UserController extends Controller
 
     public function login(Request $request)
     {
+
+        dd($request);
         // $dataArr = [
         //     'user_id'     => "1",
         //     'file'           => 'file',
@@ -85,7 +87,7 @@ class UserController extends Controller
             'first_name' => ['required'],
             'last_name' => ['required'],
             'username' => ['required', Rule::unique('users', 'username')],
-            'email' => ['required', 'email', Rule::unique('users', 'email')],
+            'email' => ['required', 'email', 'ends_with:gmail.com', Rule::unique('users', 'email')],
             'password' => ['required',  'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&,*._])(?=.*\d).{8,16}$/', 'confirmed'],
             'password_confirmation' => ['required'],
         ], $this->custom_message);
