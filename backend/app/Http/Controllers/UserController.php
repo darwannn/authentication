@@ -7,12 +7,14 @@ use Carbon\Carbon;
 use App\Models\User;
 use App\Helpers\Auth;
 
+use App\Models\ErrorLog;
 use App\Helpers\Response;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
-use Illuminate\Support\Facades\Hash;
 
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -29,6 +31,22 @@ class UserController extends Controller
 
     public function login(Request $request)
     {
+        // $dataArr = [
+        //     'user_id'     => "1",
+        //     'file'           => 'file',
+        //     'error_summary'  => 'Line ',
+        //     'log_trace'      => 'trace'
+        // ];
+        // ErrorLog::create($dataArr);
+        // try {
+
+        //     throw new \Exception("Something went wrong");
+        // } catch (Throwable $e) {
+
+        //     $this->reportException($e);
+        // }
+        // Log::info('This is some useful information.');;
+        return Response::success(url()->current(), 'Login successfully');
         $identifierType = Auth::check_identifier($request->identifier);
         $inputs =  $request->validate([
             'identifier' => ['required', Rule::exists('users',  $identifierType)],

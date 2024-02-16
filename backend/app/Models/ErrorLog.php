@@ -5,9 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Movie extends Model
+class ErrorLog extends Model
 {
     use HasFactory;
-    protected $fillable = ['user_id', 'title', 'thumbnail', 'desctiption'];
-    public $table = 'movie';
+    public $table = 'error_logs';
+    protected $fillable = ['user_id', 'file', 'error_summary', 'log_trace'];
 }

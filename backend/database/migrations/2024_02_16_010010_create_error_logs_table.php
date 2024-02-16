@@ -11,12 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('movie', function (Blueprint $table) {
+        Schema::create('error_logs', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained();
-            $table->string('title');
-            $table->string('thumbnail');
-            $table->text('desctiption');
+            // protected $fillable = ['id', 'file', 'error_summary', 'log_trace' ];
+            $table->id('user_id');
+            $table->string('file');
+            $table->text('error_summary');
+            $table->text('log_trace');
+
             $table->timestamps();
         });
     }
@@ -26,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('movie');
+        Schema::dropIfExists('error_logs');
     }
 };

@@ -9,9 +9,15 @@ use Illuminate\Http\Request;
 
 class MovieController extends Controller
 {
-    // Public
     public function index()
     {
+        try {
+
+            throw new \Exception("Something went wrong");
+        } catch (Throwable $e) {
+
+            $this->reportException($e);
+        }
         try {
             $movies =  Movie::all();
             return Response::success(["movies" => $movies], null, 200);
@@ -21,7 +27,6 @@ class MovieController extends Controller
         }
     }
 
-    // Public
     public function show($id)
     {
         try {
@@ -36,27 +41,19 @@ class MovieController extends Controller
         }
     }
 
-    // Public
-    public function search($category)
-    {
-        try {
-            $movie = Movie::where('category', 'like', '%' . $category . '%')->get();
-            return Response::success(["movie" => $movie], null, 200);
-        } catch (Exception $e) {
-            error_log($e);
-            return Response::error();
-        }
-    }
-
-
-    // Private
     public function store(Request $request)
     {
+        try {
+
+            throw new \Exception("Something went wrong");
+        } catch (Throwable $e) {
+
+            $this->reportException($e);
+        }
         $inputs = $request->validate([
             'title' => ['required'],
             'thumbnail' => ['required', 'image', 'mimes:jpeg,jpg,png'],
             'desctiption' => ['required'],
-            'category' => ['required'],
 
         ]);
         try {
@@ -72,7 +69,6 @@ class MovieController extends Controller
         }
     }
 
-    // Private
     public function update(Request $request, $id)
     {
         $movie = Movie::find($id);
@@ -89,7 +85,6 @@ class MovieController extends Controller
             'thumbnail' => ['image', 'mimes:jpeg,jpg,png'],
 
             'desctiption' => ['required'],
-            'category' => ['required'],
         ]);
 
         try {
@@ -105,7 +100,6 @@ class MovieController extends Controller
         }
     }
 
-    // Private
     public function destroy($id)
     {
         try {

@@ -1,8 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\TestController;
+use App\Http\Controllers\GenreMovieController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\GenreController;
 use App\Http\Controllers\MovieController;
 use App\Http\Controllers\AccountController;
 
@@ -17,7 +18,6 @@ use App\Http\Controllers\AccountController;
 |
 */
 
-Route::post('/test', [TestController::class, 'get_working_days']);
 
 
 Route::post('/auth/register', [UserController::class, 'register']);
@@ -29,12 +29,21 @@ Route::get('/auth/verify/{token}/{email}', [UserController::class, 'verify']);
 Route::put('/auth/activate/{token}/{email}', [UserController::class, 'activate']);
 Route::get('/movie', [MovieController::class, 'index']);
 Route::get('/movie/{id}', [MovieController::class, 'show']);
-Route::get('/movie/search/{category}', [MovieController::class, 'search']);
+
+Route::get('/genre', [GenreController::class, 'index']);
+Route::get('/genre/{id}', [GenreController::class, 'show']);
+
 
 Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('/me', [AccountController::class, 'me']);
+
+
     Route::post('/auth/logout', [UserController::class, 'logout']);
     Route::post('/movie', [MovieController::class, 'store']);
     Route::put('/movie/{id}', [MovieController::class, 'update']);
     Route::delete('/movie/{id}', [MovieController::class, 'destroy']);
+
+    Route::post('/genre', [GenreController::class, 'store']);
+    Route::put('/genre/{id}', [GenreController::class, 'update']);
+    Route::delete('/genre/{id}', [GenreController::class, 'destroy']);
 });

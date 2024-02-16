@@ -3,6 +3,8 @@
 namespace App\Exceptions;
 
 use Throwable;
+use App\Models\ErrorLog;
+use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 
@@ -25,7 +27,29 @@ class Handler extends ExceptionHandler
     public function register(): void
     {
         $this->reportable(function (Throwable $e) {
-            //
+            error_log("12345" . $e);
+            //Str::uuid(),
+            $data = [
+
+                'file'    => $e->getFile(),
+                'line'    => $e->getLine(),
+                'message' => $e->getMessage(),
+                'trace'   => $e->getTraceAsString(),
+            ];
+
+            $dataArr = [
+
+                'file'           => $data['file'],
+                'error_summary'  => 'Line ' . $data['line'] . ' ' . $data['message'],
+                'log_trace'      => $data['trace']
+            ];
+
+            if (auth()->check()) {
+                $dataArr['user_id'] = auth()->user()->id;
+            } else {
+                $dataArr['user_id'] = 0;
+            }
+            ErrorLog::create($dataArr);
         });
     }
 
