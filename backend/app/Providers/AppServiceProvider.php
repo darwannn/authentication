@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use Laravel\Sanctum\Sanctum;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -27,5 +28,15 @@ class AppServiceProvider extends ServiceProvider
             }
             return  $is_unused;
         };
+
+        //can get other param like $post
+        //https: //www.youtube.com/watch?v=wK-dtZyN8p0
+        Gate::define('admin-only', function ($user) {
+
+            if ($user->role == "admin") {
+                return true;
+            }
+            return false;
+        });
     }
 }

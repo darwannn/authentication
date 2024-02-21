@@ -6,14 +6,15 @@ use Exception;
 use App\Models\Movie;
 use App\Helpers\Response;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class MovieController extends Controller
 {
-    // Public
-    public function index()
+    public function index(Request $request)
     {
         try {
-            $movies =  Movie::all();
+            $page_size = $request->paginate ?? 20;
+            $movies = Movie::query()->paginate($page_size);
             return Response::success(["movies" => $movies], null, 200);
         } catch (Exception $e) {
             error_log($e);
@@ -21,7 +22,19 @@ class MovieController extends Controller
         }
     }
 
-    // Public
+
+    // public function index()
+    // {
+
+    //     try {
+    //         $movies =  Movie::all();
+    //         return Response::success(["movies" => $movies], null, 200);
+    //     } catch (Exception $e) {
+    //         error_log($e);
+    //         return Response::error();
+    //     }
+    // }
+
     public function show($id)
     {
         try {
@@ -36,63 +49,65 @@ class MovieController extends Controller
         }
     }
 
-    // Public
-    public function search($category)
-    {
-        try {
-            $movie = Movie::where('category', 'like', '%' . $category . '%')->get();
-            return Response::success(["movie" => $movie], null, 200);
-        } catch (Exception $e) {
-            error_log($e);
-            return Response::error();
-        }
-    }
-
-
-    // Private
     public function store(Request $request)
     {
-        $inputs = $request->validate([
-            'title' => ['required'],
-            'thumbnail' => ['required', 'image', 'mimes:jpeg,jpg,png'],
-            'desctiption' => ['required'],
-            'category' => ['required'],
+        //without auth()->user()
+        //$this->authorize('admin-only');
 
-        ]);
-        try {
-            if ($request->hasFile('thumbnail')) {
-                $inputs['thumbnail'] = $request->file('thumbnail')->store('thumbnails', 'public');
+        if (Gate::allows('admin-only', auth()->user())) {
+            $inputs = $request->validate([
+                'title' => ['required'],
+                'thumbnail' => ['required', 'image', 'mimes:jpeg,jpg,png'],
+                'desctiption' => ['required']
+            ]);
+            try {
+                if ($request->hasFile('thumbnail')) {
+                    $inputs['thumbnail'] = $request->file('thumbnail')->store('thumbnails', 'public');
+                }
+                $inputs['user_id'] = auth()->id();
+                $movie = Movie::create($inputs);
+                return Response::success(["movie" => $movie], 'Movie created successfully', 200);
+            } catch (Exception $e) {
+                error_log($e);
+                return Response::error();
             }
-            $inputs['user_id'] = auth()->id();
-            $movie = Movie::create($inputs);
-            return Response::success(["movie" => $movie], 'Movie created successfully', 200);
+        }
+        return Response::error('Unauthorized', 403);
+    }
+
+    public function search($title)
+    {
+        try {
+
+            $movies = Movie::where('title', 'like', '%' . $title . '%')->get();
+            return Response::success(["movies" => $movies], null, 200);
         } catch (Exception $e) {
             error_log($e);
             return Response::error();
         }
     }
 
-    // Private
     public function update(Request $request, $id)
     {
+        echo "updates" . $request->title;
         $movie = Movie::find($id);
         if (!$movie) {
             return Response::error('Resource not found', 404);
         }
-
-        if (auth()->id() != $movie->user_id) {
-            return Response::error('Unauthorized', 401);
-        }
-
-        $inputs = $request->validate([
-            'title' => ['required'],
-            'thumbnail' => ['image', 'mimes:jpeg,jpg,png'],
-
-            'desctiption' => ['required'],
-            'category' => ['required'],
-        ]);
-
         try {
+            $this->authorize('update', [$movie]);
+            // if (auth()->id() != $movie->user_id) {
+            //     return Response::error('Unauthorized', 401);
+            // }
+
+            $inputs = $request->validate([
+                'title' => ['required'],
+                'thumbnail' => ['image', 'mimes:jpeg,jpg,png'],
+
+                'desctiption' => ['required'],
+            ]);
+
+
             if ($request->hasFile('thumbnail')) {
                 $inputs['thumbnail'] = $request->file('thumbnail')->store('thumbnails', 'public');
             }
@@ -105,7 +120,6 @@ class MovieController extends Controller
         }
     }
 
-    // Private
     public function destroy($id)
     {
         try {
