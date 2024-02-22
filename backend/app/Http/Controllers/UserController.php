@@ -36,30 +36,30 @@ class UserController extends Controller
             'identifier' => ['required', Rule::exists('users',  $identifierType)],
             'password' => ['required'],
         ], $this->custom_message);
-        try {
+        //try {
 
-            $user = User::where($identifierType, $inputs['identifier'])->first();
-            if (!$user || !Hash::check($inputs['password'], $user->password)) {
-                return Response::error('Incorrect Password', 400);
-            }
-
-            if ($user->status == 'pending') {
-
-
-                $is_sent = Auth::send_email($user->email, "activate");
-                if ($is_sent) {
-                    return Response::error('Account not activated. To be able to use your account, please activate it first by clicking the link  sent to your email.');
-                }
-            }
-
-
-            $token = $user->createToken(env('SANCTUM_SECRET'))->plainTextToken;
-            return Response::success(['user' => $user, 'token' => $token], 'Login successfully');
-        } catch (\Exception $e) {
-            return response()->json(["error" => $e]);
-            error_log($e);
-            return Response::error();
+        $user = User::where($identifierType, $inputs['identifier'])->first();
+        if (!$user || !Hash::check($inputs['password'], $user->password)) {
+            return Response::error('Incorrect Password', 400);
         }
+
+        if ($user->status == 'pending') {
+
+
+            $is_sent = Auth::send_email($user->email, "activate");
+            if ($is_sent) {
+                return Response::error('Account not activated. To be able to use your account, please activate it first by clicking the link  sent to your email.');
+            }
+        }
+
+
+        $token = $user->createToken(env('SANCTUM_SECRET'))->plainTextToken;
+        return Response::success(['user' => $user, 'token' => $token], 'Login successfully');
+        // } catch (\Exception $e) {
+        //     return response()->json(["error" => $e]);
+        //     error_log($e);
+        //     return Response::error();
+        // }
     }
 
     public function register(Request $request)

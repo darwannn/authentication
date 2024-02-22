@@ -24,13 +24,15 @@ class Handler extends ExceptionHandler
      */
     public function register(): void
     {
-        $this->renderable(function (Throwable  $exception,  $request) {
-            //.echo $exception;
+        $this->renderable(function (Throwable $exception, $request) {
+            if ($exception instanceof ValidationException) {
+                return $this->invalidJson($request, $exception);
+            }
+
             if ($request->is('api/*')) {
                 return response()->json([
-                    'status'    => "error",
-                    'message'  => $exception->getMessage(),
-
+                    'status' => "error",
+                    'message' => $exception->getMessage(),
                 ], 500);
             }
         });
