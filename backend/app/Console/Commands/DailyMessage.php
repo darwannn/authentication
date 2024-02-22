@@ -2,7 +2,11 @@
 
 namespace App\Console\Commands;
 
+use Carbon\Carbon;
+use App\Models\Movie;
 use Illuminate\Console\Command;
+use App\Notifications\EmailNotification;
+use Illuminate\Support\Facades\Notification;
 
 class DailyMessage extends Command
 {
@@ -26,6 +30,20 @@ class DailyMessage extends Command
     public function handle()
     {
         //
-        echo "This is a test command";
+        // echo "This is a test command";
+
+        $movie = Movie::where('created_at', '<', Carbon::now())->first();
+        if ($movie) {
+            // $movie->delete();
+            // $details = [
+            //     "id" => $movie->id,
+            //     "email" => 'darwinsanluis.ramos14@gmail.com',
+            //     "name" => 'Darw In'
+            // ];
+            // Notification::send(auth()->user(), new EmailNotification($details));
+            echo "email sent" . $movie;
+        } else {
+            echo "No movie found";
+        }
     }
 }

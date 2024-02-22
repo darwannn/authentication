@@ -35,12 +35,13 @@ class EmailNotification extends Notification
      */
     public function toMail(object $notifiable): MailMessage
     {
+        $baseUrl = 'https://example.com';
         return (new MailMessage)
             ->greeting('Greetings!')
             ->from('darwinsanluis.ramos14@gmail.com', 'Darw In')
             ->subject('Invoice Payment Failed')
             ->line('1st line')
-            ->action(' Action', url('/' . $this->details['id']))
+            ->action(' Action', url($baseUrl . '/' . $this->details['id']))
             ->line('2nd line');
     }
 
@@ -55,6 +56,4 @@ class EmailNotification extends Notification
             //
         ];
     }
-
-
 }

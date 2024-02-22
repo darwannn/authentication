@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('title');
             $table->string('thumbnail');
             $table->text('desctiption');
-            $table->string('category');
+
             $table->timestamps();
         });
     }

@@ -12,6 +12,7 @@ class Auth
 {
     public static function send_email($email, $action)
     {
+        echo $email . "email;";
         $code = Auth::generate_code();
         $expires_at = Carbon::now()->addMinutes(15);
 

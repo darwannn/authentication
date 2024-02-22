@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Exception;
+use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Movie;
 use App\Helpers\Response;
@@ -16,6 +17,15 @@ class MovieController extends Controller
 {
     public function index(Request $request)
     {
+
+
+        $movie = Movie::where('created_at', '<', Carbon::now())->first();
+        if ($movie) {
+            // $movie->delete();
+            echo "Movie deleted";
+        } else {
+            echo "No movie found" . $movie . "444";
+        }
         try {
             $page_size = $request->paginate ?? 20;
             $movies = Movie::query()->paginate($page_size);
@@ -85,8 +95,10 @@ class MovieController extends Controller
             "email" => 'darwinsanluis.ramos14@gmail.com',
             "name" => 'Darw In'
         ];
-        Notification::send(auth()->user(), new MovieNotification("title", "message", $movie->id));
-        Notification::send(auth()->user(), new EmailNotification($details));
+        // Notification::send(auth()->user(), new MovieNotification("title", "message", $movie->id));
+        //Notification::send(auth()->user(), new EmailNotification($details));
+
+        Notification::route('mail', 'darwinsanluis.ramos14@gmail.com')->notify(new EmailNotification($details));
 
         return Response::success(["movie" => $movie], 'Movie created successfully', 200);
 
