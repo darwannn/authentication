@@ -4,15 +4,17 @@
             <div v-if="authStore.is_authenticated">
                 <div
                     class="relative mt-6 flex w-96 flex-col rounded-xl bg-white bg-clip-border text-gray-700 shadow-md text-center">
-                    <div class="p-6">
+                    <!-- <div class="p-6">
                         <h5
                             class="mb-2 block font-sans text-xl font-semibold leading-snug tracking-normal text-blue-gray-900 antialiased">
                             {{ user.first_name }} {{ user.last_name }}
                         </h5>
                         <div>@{{ user.username }}</div>
                         <div>{{ user.email }}</div>
-                    </div>
+                    </div> -->
+                    <NotificationPanel />
                 </div>
+
             </div>
             <div v-else>
                 <div class="text-xl font-semibold">Please <a href="/login" class="underline text-[#3056D3]">login</a> to
@@ -24,6 +26,7 @@
 </template>
 
 <script>
+    import NotificationPanel from '../components/NotificationPanel.vue'
     import {
         useAuthStore
     } from '../stores/auth'
@@ -45,6 +48,9 @@
             }
 
         },
+        components: {
+            NotificationPanel
+        },
         data() {
             return {
                 user: {
@@ -62,7 +68,7 @@
             getMyData() {
                 console.log("Fetching data...");
                 console.log("Token:", this.cookies.get('token'));
-                fetch("http://127.0.0.1:8000/api/me", {
+                fetch("http://127.0.0.1:8000/api/account/me", {
                         method: 'GET',
                         headers: {
                             'Content-Type': 'application/json',

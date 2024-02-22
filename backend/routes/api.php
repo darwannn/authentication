@@ -5,6 +5,7 @@ use App\Http\Controllers\TestController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\MovieController;
 use App\Http\Controllers\AccountController;
+use App\Http\Controllers\NotificationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,3 +21,9 @@ use App\Http\Controllers\AccountController;
 
 // Route::resource('movie', MovieController::class)->except(['create', 'edit'])->middleware(['auth:sanctum']);
 // Route::resource('movie', MovieController::class)->only(['create'])->middleware(['auth:sanctum']);
+
+Route::group(['prefix' => 'notification', 'middleware' => ['auth:sanctum']], function () {
+    Route::get('/', [NotificationController::class, 'show']);
+    Route::put('/update/{id}', [NotificationController::class, 'update']);
+    Route::put('/update', [NotificationController::class, 'updateAll']);
+});

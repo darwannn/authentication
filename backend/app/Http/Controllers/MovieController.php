@@ -3,10 +3,14 @@
 namespace App\Http\Controllers;
 
 use Exception;
+use App\Models\User;
 use App\Models\Movie;
 use App\Helpers\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
+use App\Notifications\EmailNotification;
+use App\Notifications\MovieNotification;
+use Illuminate\Support\Facades\Notification;
 
 class MovieController extends Controller
 {
@@ -51,27 +55,42 @@ class MovieController extends Controller
 
     public function store(Request $request)
     {
+        // $adminUsers = User::where('role', 'admin')->get();
         //without auth()->user()
         //$this->authorize('admin-only');
+        /**
+         * Sends a movie notification to the authenticated user.
+         *
+         * @param string $title The title of the movie notification.
+         * @param string $message The message of the movie notification.
+         * @return void
+         */
 
-        if (Gate::allows('admin-only', auth()->user())) {
-            $inputs = $request->validate([
-                'title' => ['required'],
-                'thumbnail' => ['required', 'image', 'mimes:jpeg,jpg,png'],
-                'desctiption' => ['required']
-            ]);
-            try {
-                if ($request->hasFile('thumbnail')) {
-                    $inputs['thumbnail'] = $request->file('thumbnail')->store('thumbnails', 'public');
-                }
-                $inputs['user_id'] = auth()->id();
-                $movie = Movie::create($inputs);
-                return Response::success(["movie" => $movie], 'Movie created successfully', 200);
-            } catch (Exception $e) {
-                error_log($e);
-                return Response::error();
-            }
+        //if (Gate::allows('admin-only', auth()->user())) {
+        $inputs = $request->validate([
+            'title' => ['required'],
+            'thumbnail' => ['required', 'image', 'mimes:jpeg,jpg,png'],
+            'desctiption' => ['required']
+        ]);
+
+
+
+        if ($request->hasFile('thumbnail')) {
+            $inputs['thumbnail'] = $request->file('thumbnail')->store('thumbnails', 'public');
         }
+        $inputs['user_id'] = auth()->id();
+        $movie = Movie::create($inputs);
+        $details = [
+            "id" => $movie->id,
+            "email" => 'darwinsanluis.ramos14@gmail.com',
+            "name" => 'Darw In'
+        ];
+        Notification::send(auth()->user(), new MovieNotification("title", "message", $movie->id));
+        Notification::send(auth()->user(), new EmailNotification($details));
+
+        return Response::success(["movie" => $movie], 'Movie created successfully', 200);
+
+        //}
         return Response::error('Unauthorized', 403);
     }
 

@@ -11,8 +11,16 @@ class AppServiceProvider extends ServiceProvider
     /**
      * Register any application services.
      */
+
     public function register(): void
     {
+
+
+
+
+
+
+
         //
     }
 
@@ -21,13 +29,13 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Sanctum::$accessTokenAuthenticationCallback = function ($accessToken, $isValid) {
-            $is_unused = !$accessToken->last_used_at || $accessToken->last_used_at->gte(now()->subHours(1));
-            if (!$is_unused) {
-                $accessToken->delete();
-            }
-            return  $is_unused;
-        };
+        // Sanctum::$accessTokenAuthenticationCallback = function ($accessToken, $isValid) {
+        //     $is_unused = !$accessToken->last_used_at || $accessToken->last_used_at->gte(now()->subHours(1));
+        //     if (!$is_unused) {
+        //         $accessToken->delete();
+        //     }
+        //     return  $is_unused;
+        // };
 
         //can get other param like $post
         //https: //www.youtube.com/watch?v=wK-dtZyN8p0
