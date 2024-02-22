@@ -2,17 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use Exception;
+
 use Carbon\Carbon;
-
 use App\Models\User;
-use App\Helpers\Auth;
 
+use App\Helpers\Auth;
 use App\Helpers\Response;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
-use Illuminate\Support\Facades\Hash;
 
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -29,6 +30,7 @@ class UserController extends Controller
 
     public function login(Request $request)
     {
+        //  throw new Exception('This is a test exception');
         $identifierType = Auth::check_identifier($request->identifier);
         $inputs =  $request->validate([
             'identifier' => ['required', Rule::exists('users',  $identifierType)],
